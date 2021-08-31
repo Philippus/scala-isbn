@@ -27,8 +27,8 @@ scalacOptions += "-deprecation"
 
 libraryDependencies ++= Seq(
   "org.scala-lang.modules" %% "scala-xml" % "2.0.1",
-  "org.scalameta" %% "munit" % "0.7.28" % Test,
-  "org.scalameta" %% "munit-scalacheck" % "0.7.28" % Test
+  "org.scalameta" %% "munit" % "0.7.29" % Test,
+  "org.scalameta" %% "munit-scalacheck" % "0.7.29" % Test
 )
 
 testFrameworks += new TestFramework("munit.Framework")
