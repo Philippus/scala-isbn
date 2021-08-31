@@ -40,8 +40,16 @@ class IsbnSuite extends ScalaCheckSuite {
     Isbn("9781617292774").flatMap(_.toIsbn10).contains("161729277X")
   }
 
+  property("prevents conversion to isbn-10 if not possible") {
+    Isbn("9798615656972").flatMap(_.toIsbn10).isEmpty
+  }
+
   property("can convert to an isbn-13 number ending in 0") {
     Isbn("1563892790").map(_.value).contains("9781563892790")
+  }
+
+  property("has a toIsbn13-method") {
+    Isbn("9780999063507").map(_.toIsbn13).contains("9780999063507")
   }
 
   property("can validate isbn-13s") {

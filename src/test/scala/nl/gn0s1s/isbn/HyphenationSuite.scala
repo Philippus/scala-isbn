@@ -16,6 +16,10 @@ class HyphenationSuite extends ScalaCheckSuite {
     Isbn("9781617292774").flatMap(_.toHyphenatedIsbn10).contains("1-61729-277-X")
   }
 
+  property("prevents conversion to a hyphenated isbn-10 if not possible") {
+    Isbn("9798615656972").flatMap(_.toHyphenatedIsbn10).isEmpty
+  }
+
   property("can break up an isbn-13 into parts") {
     val isbn = Isbn("9781617292774").get
 
