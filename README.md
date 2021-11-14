@@ -39,11 +39,11 @@ book.map(_.toHyphenatedIsbn10) // val res3: Option[Option[String]] = Some(Some(1
 book.map(_.toHyphenatedIsbn13) // val res4: Option[String] = Some(978-1-61729-277-4)
 book.map(_.toAmazonStyleHyphenatedIsbn13) // val res5: Option[String] = Some(978-1617292774)
 
-book.map(_.prefixElement) // val res1: Option[String] = Some(978)
-book.map(_.registrationGroupElement) // val res1: Option[String] = Some(1)
-book.map(_.registrantElement) // val res1: Option[String] = Some(61729)
-book.map(_.publicationElement) // val res1: Option[String] = Some(277)
-book.map(_.checkDigit) // val res1: Option[String] = Some(4)
+book.map(_.prefixElement) // val res6: Option[String] = Some(978)
+book.map(_.registrationGroupElement) // val res7: Option[String] = Some(1)
+book.map(_.registrantElement) // val res8: Option[String] = Some(61729)
+book.map(_.publicationElement) // val res9: Option[String] = Some(277)
+book.map(_.checkDigit) // val res10: Option[String] = Some(4)
 ```
 
 ## Resources
