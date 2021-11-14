@@ -33,9 +33,9 @@ val book = Isbn("9781617292774") // val book: Option[nl.gn0s1s.isbn.Isbn] = Some
 val book = Isbn("abc") // val book: Option[nl.gn0s1s.isbn.Isbn] = None, 
 val book = Isbn("161729277X") // val book: Option[nl.gn0s1s.isbn.Isbn] = Some(Isbn(9781617292774))
 
-book.map(_.toIsbn10) // val res1: Option[Option[String]] = Some(Some(161729277X))
+book.flatMap(_.toIsbn10) // val res1: Option[String] = Some(161729277X)
 book.map(_.toIsbn13) // val res2: Option[String] = Some(9781617292774)
-book.map(_.toHyphenatedIsbn10) // val res3: Option[Option[String]] = Some(Some(1-61729-277-X))
+book.flatMap(_.toHyphenatedIsbn10) // val res3: Option[String] = Some(1-61729-277-X)
 book.map(_.toHyphenatedIsbn13) // val res4: Option[String] = Some(978-1-61729-277-4)
 book.map(_.toAmazonStyleHyphenatedIsbn13) // val res5: Option[String] = Some(978-1617292774)
 
