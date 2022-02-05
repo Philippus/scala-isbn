@@ -41,7 +41,7 @@ final case class Isbn private (value: String) {
         .toInt
       length <- rule \ "Length" if length.text.toInt > 0
     } yield s"${prefix.text}-${value.substring(prefix.text.filterNot(_ == '-').length, prefix.text.filterNot(_ == '-').length + length.text.toInt)}-${value
-      .substring(prefix.text.filterNot(_ == '-').length + length.text.toInt, value.length - 1)}-${value.last}"
+        .substring(prefix.text.filterNot(_ == '-').length + length.text.toInt, value.length - 1)}-${value.last}"
   }.headOption.getOrElse(value)
 }
 
