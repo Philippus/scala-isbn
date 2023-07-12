@@ -26,7 +26,7 @@ Compile / packageBin / packageOptions += Package.ManifestAttributes(
 scalacOptions += "-deprecation"
 
 libraryDependencies ++= Seq(
-  "org.scala-lang.modules" %% "scala-xml" % "2.1.0",
+  "org.scala-lang.modules" %% "scala-xml" % "2.2.0",
   "org.scalameta" %% "munit" % "0.7.29" % Test,
   "org.scalameta" %% "munit-scalacheck" % "0.7.29" % Test
 )
