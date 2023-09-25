@@ -22,36 +22,37 @@ final case class Isbn private (value: String) {
 
   def toHyphenatedIsbn13: String = {
     for {
-      ucc <- Isbn.rangeMessage \ "EAN.UCCPrefixes" \ "EAN.UCC"
-      uccPrefix <- ucc \ "Prefix" if value.startsWith(uccPrefix.text)
-      uccRule <- ucc \ "Rules" \ "Rule"
-      uccRange <- uccRule \ "Range"
+      ucc              <- Isbn.rangeMessage \ "EAN.UCCPrefixes" \ "EAN.UCC"
+      uccPrefix        <- ucc \ "Prefix" if value.startsWith(uccPrefix.text)
+      uccRule          <- ucc \ "Rules" \ "Rule"
+      uccRange         <- uccRule \ "Range"
       Array(start, end) = uccRange.text.split('-') if start.toInt to end.toInt contains value
         .substring(uccPrefix.text.length, uccPrefix.text.length + start.length)
         .toInt
-      uccLength <- uccRule \ "Length" if uccLength.text.toInt > 0
-      group <- Isbn.rangeMessage \ "RegistrationGroups" \ "Group"
-      prefix <- group \ "Prefix" filter (node =>
-        node.text == s"${uccPrefix.text}-${value.substring(uccPrefix.text.length, uccPrefix.text.length + uccLength.text.toInt)}"
-      )
-      rule <- group \ "Rules" \ "Rule"
-      range <- rule \ "Range"
+      uccLength        <- uccRule \ "Length" if uccLength.text.toInt > 0
+      group            <- Isbn.rangeMessage \ "RegistrationGroups" \ "Group"
+      prefix           <-
+        group \ "Prefix" filter (node =>
+          node.text == s"${uccPrefix.text}-${value.substring(uccPrefix.text.length, uccPrefix.text.length + uccLength.text.toInt)}"
+        )
+      rule             <- group \ "Rules" \ "Rule"
+      range            <- rule \ "Range"
       Array(start, end) = range.text.split('-') if start.toInt to end.toInt contains value
         .substring(prefix.text.filterNot(_ == '-').length, prefix.text.filterNot(_ == '-').length + start.length)
         .toInt
-      length <- rule \ "Length" if length.text.toInt > 0
+      length           <- rule \ "Length" if length.text.toInt > 0
     } yield s"${prefix.text}-${value.substring(prefix.text.filterNot(_ == '-').length, prefix.text.filterNot(_ == '-').length + length.text.toInt)}-${value
         .substring(prefix.text.filterNot(_ == '-').length + length.text.toInt, value.length - 1)}-${value.last}"
   }.headOption.getOrElse(value)
 }
 
 object Isbn {
-  private val file = scala.io.Source.fromResource("RangeMessage.xml").reader()
+  private val file              = scala.io.Source.fromResource("RangeMessage.xml").reader()
   private lazy val rangeMessage = scala.xml.XML.load(file)
 
   def apply(value: String): Option[Isbn] = {
     val candidate = value.filterNot(ch => ch == '-' || ch == ' ')
-    if (isValidIsbn13(candidate)) // isbn-13
+    if (isValidIsbn13(candidate))      // isbn-13
       Some(new Isbn(candidate))
     else if (isValidIsbn10(candidate)) // isbn-10
       Some(new Isbn(isbn10toIsbn13(candidate)))
@@ -81,26 +82,26 @@ object Isbn {
 
   private def calculateCheckDigitForIsbn13(isbn13: String): Char = {
     val isbn13Prefix = isbn13.take(12)
-    val res = isbn13Prefix
+    val res          = isbn13Prefix
       .map(_.asDigit)
       .zip(List.fill(6)(Seq(1, 3)).flatten)
       .foldLeft(0)((z, x) => z + (x._1 * x._2))
 
     10 - res % 10 match {
-      case 10 => '0'
+      case 10    => '0'
       case digit => (digit + 48).toChar
     }
   }
 
   private def calculateCheckDigitForIsbn10(isbn10: String): Char = {
     val isbn10Prefix = isbn10.take(9)
-    val res = isbn10Prefix
+    val res          = isbn10Prefix
       .map(_.asDigit)
       .zip(10 to 1 by -1)
       .foldLeft(0)((z, x) => z + (x._1 * x._2))
 
     (11 - res % 11) % 11 match {
-      case 10 => 'X'
+      case 10    => 'X'
       case digit => (digit + 48).toChar
     }
   }
