@@ -1,5 +1,8 @@
 package nl.gn0s1s.isbn
 
+import scala.annotation.nowarn
+
+@nowarn
 final case class Isbn private (value: String) {
   lazy val Array(prefixElement, registrationGroupElement, registrantElement, publicationElement, checkDigit) =
     toHyphenatedIsbn13.split('-')

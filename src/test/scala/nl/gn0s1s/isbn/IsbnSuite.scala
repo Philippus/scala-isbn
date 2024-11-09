@@ -1,7 +1,7 @@
 package nl.gn0s1s.isbn
 
 import munit.ScalaCheckSuite
-import org.scalacheck.Prop._
+import org.scalacheck.Prop.*
 
 class IsbnSuite extends ScalaCheckSuite {
   property("accepts isbn-13s") {

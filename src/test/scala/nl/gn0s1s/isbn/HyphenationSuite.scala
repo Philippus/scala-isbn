@@ -1,7 +1,7 @@
 package nl.gn0s1s.isbn
 
 import munit.ScalaCheckSuite
-import org.scalacheck.Prop._
+import org.scalacheck.Prop.*
 
 class HyphenationSuite extends ScalaCheckSuite {
   property("can convert to a hyphenated isbn-13") {
