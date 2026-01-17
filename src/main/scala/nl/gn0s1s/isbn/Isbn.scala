@@ -29,20 +29,24 @@ final case class Isbn private (value: String) {
       uccPrefix        <- ucc \ "Prefix" if value.startsWith(uccPrefix.text)
       uccRule          <- ucc \ "Rules" \ "Rule"
       uccRange         <- uccRule \ "Range"
-      Array(start, end) = uccRange.text.split('-') if start.toInt to end.toInt contains value
-        .substring(uccPrefix.text.length, uccPrefix.text.length + start.length)
-        .toInt
+      Array(start, end) = uccRange.text.split('-') if start.toInt to end.toInt contains
+        value
+          .substring(uccPrefix.text.length, uccPrefix.text.length + start.length)
+          .toInt
       uccLength        <- uccRule \ "Length" if uccLength.text.toInt > 0
       group            <- Isbn.rangeMessage \ "RegistrationGroups" \ "Group"
       prefix           <-
-        group \ "Prefix" filter (node =>
-          node.text == s"${uccPrefix.text}-${value.substring(uccPrefix.text.length, uccPrefix.text.length + uccLength.text.toInt)}"
-        )
+        group \ "Prefix" filter
+          (node =>
+            node.text ==
+              s"${uccPrefix.text}-${value.substring(uccPrefix.text.length, uccPrefix.text.length + uccLength.text.toInt)}"
+          )
       rule             <- group \ "Rules" \ "Rule"
       range            <- rule \ "Range"
-      Array(start, end) = range.text.split('-') if start.toInt to end.toInt contains value
-        .substring(prefix.text.filterNot(_ == '-').length, prefix.text.filterNot(_ == '-').length + start.length)
-        .toInt
+      Array(start, end) = range.text.split('-') if start.toInt to end.toInt contains
+        value
+          .substring(prefix.text.filterNot(_ == '-').length, prefix.text.filterNot(_ == '-').length + start.length)
+          .toInt
       length           <- rule \ "Length" if length.text.toInt > 0
     } yield s"${prefix.text}-${value.substring(prefix.text.filterNot(_ == '-').length, prefix.text.filterNot(_ == '-').length + length.text.toInt)}-${value
         .substring(prefix.text.filterNot(_ == '-').length + length.text.toInt, value.length - 1)}-${value.last}"
