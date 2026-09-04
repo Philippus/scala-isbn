@@ -14,7 +14,7 @@ developers := List(
 )
 
 scalaVersion := "2.13.18"
-crossScalaVersions += "3.3.8"
+crossScalaVersions += "3.9.0"
 
 scalacOptions += "-Xsource:3"
 
